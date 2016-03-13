@@ -22,7 +22,9 @@ float prevYVal;
 int xPos = 2;
 
 int yScale = 2;   // each box = 2V
-int xScale = 2;
+int xScale =1;
+
+boolean dataAvailable = false;
 
 void setup() 
 {
@@ -39,12 +41,13 @@ void setup()
 }
 
 float getYHeight(float y){
-  //  y = map(y, 0, 1023, -MAX_VOLTAGE, MAX_VOLTAGE);    // convert analog value to voltage range
+    y = map(y, 0, 1023, -MAX_VOLTAGE, MAX_VOLTAGE);    // convert analog value to voltage range
     return screenTopOffset + screenHeight/2 - (y / yScale) * (screenHeight / numHorzLines) ;
 }
 
 void draw()
 {
+    if (dataAvailable){
     smooth();
     fill(255, 255, 51);  // yellow
     stroke(255, 255, 51);
@@ -67,6 +70,7 @@ void draw()
     else {
       xPos+= xScale;
     }
+    }
     
 }
 
@@ -76,13 +80,15 @@ void serialEvent (Serial port) {
     inString = trim(inString);
     
     if(inString != null) {
+      dataAvailable = true;
       yVal = float(inString);
-      println(yVal);
+      //println(yVal);
 
      
     } else {
+      dataAvailable = false;
       yVal = 0;
-      xPos = 0;
+      xPos = 2;
     }
 }
 
