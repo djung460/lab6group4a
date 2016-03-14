@@ -4,6 +4,10 @@ static final int MAX_VOLTAGE = 5;
 Serial port;
 int baudRate = 115200;
 
+// graph titles
+String axisY = "Voltage";
+String axisX = "Time";
+
 // oscilloscope screen with wave
 int screenWidth = 600;
 int screenHeight = 480;
@@ -22,8 +26,8 @@ float yVal;
 float prevYVal;
 int xPos = 2;
 
-int yScale = 1;   // each box = 2V
-int xScale = 2;
+float yScale = 1.0f;   // each box = 2V
+float xScale = 2.0f;
 
 boolean dataAvailable = false;
 
@@ -69,7 +73,7 @@ void draw()
       initializeScreen();
     }
     else {
-      xPos+= xScale;
+      xPos+=xScale;
     }
     }
     
@@ -107,11 +111,23 @@ void initializeScreen(){
     screenRightOffset = width - (screenLeftOffset + screenWidth);
     screenBottomOffset = height - (screenTopOffset + screenHeight);
     
-    // print horizontal scale to bottom left under screen    
-    textSize(20);
-    textAlign(LEFT, TOP);
+    // print xaxis
     fill(255, 255, 51);
-    text("y-scale = " + yScale + ".00 V", screenLeftOffset+2, height-screenBottomOffset+4);
+    textSize(20);
+    textAlign(CENTER, TOP);
+    text(axisX, screenLeftOffset+screenWidth/2, height-screenBottomOffset+2);
+    
+    // print yaxis
+    textAlign(CENTER, BOTTOM);
+    pushMatrix();
+    translate(screenLeftOffset-3, screenTopOffset+screenHeight/2);
+    rotate(-HALF_PI);
+    text(axisY, 0, 0);
+    popMatrix();
+    
+    // print scales to bottom left under screen    
+    printYScale();
+    printXScale();
         
     // draw gridlines for the screen
     drawGrid(numHorzLines, numVertLines);
@@ -119,6 +135,30 @@ void initializeScreen(){
     stroke(192, 192, 192);
     rect(screenLeftOffset, screenTopOffset, screenWidth, screenHeight);
     
+    
+}
+
+void printYScale(){
+    noStroke();
+    fill(96, 96, 96);
+    rect(screenLeftOffset, height-screenBottomOffset+15, 180, 20);
+  
+    textSize(20);
+    textAlign(LEFT, TOP);
+    
+    fill(255, 255, 51);     // yellow
+    text("y-scale = " + yScale + " V", screenLeftOffset+2, height-screenBottomOffset+15);
+}
+
+void printXScale(){
+    noStroke();
+    fill(96, 96, 96);
+    rect(screenLeftOffset, height-screenBottomOffset+38, 180, 20);
+    
+    textSize(20);
+    textAlign(LEFT, TOP);
+    fill(255, 255, 51);
+    text("x-scale = " + xScale + "x", screenLeftOffset+2, height-screenBottomOffset+38);
     
 }
 
@@ -158,4 +198,31 @@ void drawDottedLine(float startX, float startY, float endX, float endY, float co
     float y = lerp(startY+1, endY-1, i/count);
     ellipse(x, y, dotSize, dotSize);
   }
+}
+
+/*****************************/
+void keyPressed(){
+  switch(key){
+    case 'w':             // increases y-Scale
+      yScale+=0.5f;
+      printYScale();
+      break;
+   case 's':              // decreases y-scale
+      if(yScale != 0.5f){
+        yScale-=0.5f;
+        printYScale();
+      }
+      break;
+    case 'a':            // decreases x-scale
+      if(xScale!=0.5f){
+        xScale-=0.5f;
+        printXScale();
+      }
+      break; 
+    case 'd':            // increases x-scale
+      xScale+=0.5f;
+      printXScale();
+      break;
+  }
+
 }
