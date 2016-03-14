@@ -31,18 +31,27 @@ float xScale = 2.0f;
 
 boolean dataAvailable = false;
 
+PImage img_w, img_a, img_s, img_d;
+
 void setup() 
 {
     size(770, 600);
     background(96, 96, 96);
     
+    img_w = loadImage("letter_w.png");
+    img_a = loadImage("letter_a.png");
+    img_s = loadImage("letter_s.png");
+    img_d = loadImage("letter_d.png");
+    
     initializeScreen();
   
     printArray(Serial.list());
     port = new Serial(this, Serial.list()[0], baudRate);
-    
+   
     port.bufferUntil('\n');
     smooth();
+    
+
 }
 
 float getYHeight(float y){
@@ -52,6 +61,7 @@ float getYHeight(float y){
 
 void draw()
 {
+   
     if (dataAvailable){
     smooth();
     fill(255, 255, 51);  // yellow
@@ -133,9 +143,27 @@ void initializeScreen(){
     drawGrid(numHorzLines, numVertLines);
     noFill();
     stroke(192, 192, 192);
-    rect(screenLeftOffset, screenTopOffset, screenWidth, screenHeight);
+    rect(screenLeftOffset, screenTopOffset, screenWidth, screenHeight);  
     
-    
+    addKeyImages();
+    addKeyText();
+}
+
+void addKeyImages(){
+    image(img_w, width-screenRightOffset+30, screenTopOffset+15, 70, 70);
+    image(img_s, width-screenRightOffset+30, screenTopOffset+15+70+50, 70, 70);
+    image(img_d, width-screenRightOffset+30, screenTopOffset+15+70+50+70+50, 70, 70);
+    image(img_a, width-screenRightOffset+30, screenTopOffset+15+70+50+70+50+70+50, 70, 70);
+}
+
+void addKeyText(){
+    fill(0, 0, 0);
+    textSize(16);
+    textAlign(CENTER, CENTER);
+    text("Inc. y-scale", width-screenRightOffset+30+40, screenTopOffset+99);
+    text("Dec. y-scale", width-screenRightOffset+30+40, screenTopOffset+99+99+20);
+    text("Inc. x-scale", width-screenRightOffset+30+40, screenTopOffset+99+99+20+99+20);
+    text("Dec. x-scale", width-screenRightOffset+30+40, screenTopOffset+99+99+20+99+20+99+20);
 }
 
 void printYScale(){
