@@ -2,6 +2,7 @@ import processing.serial.*;
 static final int MAX_VOLTAGE = 5;
 
 Serial port;
+int baudRate = 115200;
 
 // oscilloscope screen with wave
 int screenWidth = 600;
@@ -22,7 +23,7 @@ float prevYVal;
 int xPos = 2;
 
 int yScale = 2;   // each box = 2V
-int xScale =1;
+int xScale = 1;
 
 boolean dataAvailable = false;
 
@@ -34,14 +35,14 @@ void setup()
     initializeScreen();
   
     printArray(Serial.list());
-    port = new Serial(this, Serial.list()[0], 115200);
+    port = new Serial(this, Serial.list()[0], baudRate);
     
     port.bufferUntil('\n');
     smooth();
 }
 
 float getYHeight(float y){
-    y = map(y, 0, 1023, -MAX_VOLTAGE, MAX_VOLTAGE);    // convert analog value to voltage range
+    y = map(y, 0, 1023, 0, MAX_VOLTAGE);    // convert analog value to voltage range
     return screenTopOffset + screenHeight/2 - (y / yScale) * (screenHeight / numHorzLines) ;
 }
 
@@ -59,7 +60,7 @@ void draw()
     }
 
     else{
-      line(screenLeftOffset+(xPos - 1), prevYVal, screenLeftOffset + xPos, yHeight);
+      line(screenLeftOffset+(xPos - 2), prevYVal, screenLeftOffset + xPos, yHeight);
     }
     prevYVal = yHeight;
     
@@ -68,7 +69,7 @@ void draw()
       initializeScreen();
     }
     else {
-      xPos+= xScale;
+      xPos++;
     }
     }
     
@@ -79,10 +80,10 @@ void serialEvent (Serial port) {
     String inString = port.readStringUntil('\n');
     inString = trim(inString);
     
-    if(inString != null) {
+    if(inString != null || float(inString) == -1) {
       dataAvailable = true;
       yVal = float(inString);
-      //println(yVal);
+      println(yVal);
 
      
     } else {
