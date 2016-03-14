@@ -30,8 +30,9 @@ float yScale = 1.0f;   // each box = 2V
 float xScale = 2.0f;
 
 boolean dataAvailable = false;
+boolean paused = false;
 
-PImage img_w, img_a, img_s, img_d;
+PImage img_w, img_a, img_s, img_d, img_p;
 
 void setup() 
 {
@@ -42,6 +43,7 @@ void setup()
     img_a = loadImage("letter_a.png");
     img_s = loadImage("letter_s.png");
     img_d = loadImage("letter_d.png");
+    img_p = loadImage("letter_p.png");
     
     initializeScreen();
   
@@ -62,7 +64,7 @@ float getYHeight(float y){
 void draw()
 {
    
-    if (dataAvailable){
+    if (dataAvailable && paused==false){
     smooth();
     fill(255, 255, 51);  // yellow
     stroke(255, 255, 51);
@@ -150,20 +152,23 @@ void initializeScreen(){
 }
 
 void addKeyImages(){
-    image(img_w, width-screenRightOffset+30, screenTopOffset+15, 70, 70);
-    image(img_s, width-screenRightOffset+30, screenTopOffset+15+70+50, 70, 70);
-    image(img_d, width-screenRightOffset+30, screenTopOffset+15+70+50+70+50, 70, 70);
-    image(img_a, width-screenRightOffset+30, screenTopOffset+15+70+50+70+50+70+50, 70, 70);
+    image(img_w, width-screenRightOffset+30, screenTopOffset-5, 70, 70);
+    image(img_s, width-screenRightOffset+30, screenTopOffset+70+50-5-10-5, 70, 70);
+    image(img_d, width-screenRightOffset+30, screenTopOffset+70+50+70+50-5-10-5, 70, 70);
+    image(img_a, width-screenRightOffset+30, screenTopOffset+70+50+70+50+70+50-5-10-5, 70, 70);
+    image(img_p, width-screenRightOffset+30, screenTopOffset+70+50+70+50+70+50+70+50-5-10-5, 70, 70);
+    
 }
 
 void addKeyText(){
     fill(0, 0, 0);
     textSize(16);
     textAlign(CENTER, CENTER);
-    text("Inc. y-scale", width-screenRightOffset+30+40, screenTopOffset+99);
-    text("Dec. y-scale", width-screenRightOffset+30+40, screenTopOffset+99+99+20);
-    text("Inc. x-scale", width-screenRightOffset+30+40, screenTopOffset+99+99+20+99+20);
-    text("Dec. x-scale", width-screenRightOffset+30+40, screenTopOffset+99+99+20+99+20+99+20);
+    text("Inc. y-scale", width-screenRightOffset+30+40, screenTopOffset+99-20-5);
+    text("Dec. y-scale", width-screenRightOffset+30+40, screenTopOffset+99+99+20-20-10);
+    text("Inc. x-scale", width-screenRightOffset+30+40, screenTopOffset+99+99+20+99+20-20-10);
+    text("Dec. x-scale", width-screenRightOffset+30+40, screenTopOffset+99+99+20+99+20+99+20-20-10);
+    text("Pause", width-screenRightOffset+30+40, screenTopOffset+99+99+20+99+20+99+20-20+99+20-10);
 }
 
 void printYScale(){
@@ -250,6 +255,10 @@ void keyPressed(){
     case 'd':            // increases x-scale
       xScale+=0.5f;
       printXScale();
+      break;
+    case 'p':
+      if(paused) paused = false;
+      else paused = true;
       break;
   }
 
