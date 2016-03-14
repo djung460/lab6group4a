@@ -22,8 +22,8 @@ float yVal;
 float prevYVal;
 int xPos = 2;
 
-int yScale = 2;   // each box = 2V
-int xScale = 1;
+int yScale = 1;   // each box = 2V
+int xScale = 2;
 
 boolean dataAvailable = false;
 
@@ -60,7 +60,7 @@ void draw()
     }
 
     else{
-      line(screenLeftOffset+(xPos - 2), prevYVal, screenLeftOffset + xPos, yHeight);
+      line(screenLeftOffset+(xPos - xScale), prevYVal, screenLeftOffset + xPos, yHeight);
     }
     prevYVal = yHeight;
     
@@ -69,7 +69,7 @@ void draw()
       initializeScreen();
     }
     else {
-      xPos++;
+      xPos+= xScale;
     }
     }
     
