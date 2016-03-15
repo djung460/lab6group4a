@@ -88,7 +88,6 @@ void draw()
       xPos+=xScale;
     }
     }
-    
 }
 
 void serialEvent (Serial port) {
