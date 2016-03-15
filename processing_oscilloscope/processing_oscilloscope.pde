@@ -8,6 +8,8 @@
 
 import processing.serial.*;
 
+String LAB_BENCH = "Lab Bench 4a";
+
 // accepted voltage range for Arduino
 final int MAX_VOLTAGE = 5;
 final int MIN_VOLTAGE = 0;
@@ -205,6 +207,18 @@ void initializeScreen(){
     // add the instructions for keyboard input for the user to the right of the screen
     addKeyImages();
     addKeyText();
+    
+    printLabBenchNumber();
+}
+
+/*
+ * Prints our team's lab bench number to the center bottom of the window
+ */
+void printLabBenchNumber(){
+    fill(255, 255, 255);
+    textSize(30);
+    textAlign(CENTER, BOTTOM);
+    text(LAB_BENCH, width/2, height-10);
 }
 
 /*
